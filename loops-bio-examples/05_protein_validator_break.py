@@ -1,3 +1,4 @@
+# Stop at the first invalid amino acid.
 protein = "MRTGWUASDJKLQWERUITYPAAJCH"
 valid_aas = "ARNDCEQGHILKMFPSTWYV"
 for i in range(len(protein)):
