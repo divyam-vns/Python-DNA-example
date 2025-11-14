@@ -1,0 +1,20 @@
+# main.py
+# Command-line program to check stop codons
+
+
+from functions import has_stop_codon
+
+
+print("=== Stop Codon Checker ===")
+dna = input("Enter a DNA sequence: ").strip()
+
+
+# Ask user if they want a specific reading frame
+frame_input = input("Enter reading frame (0/1/2) or press Enter for default 0: ").strip()
+frame = int(frame_input) if frame_input else 0
+
+
+if has_stop_codon(dna, frame=frame):
+print("✔ The input sequence HAS an in-frame stop codon.")
+else:
+print("✘ The input sequence does NOT have an in-frame stop codon.")
