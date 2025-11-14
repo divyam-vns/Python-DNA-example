@@ -1,6 +1,6 @@
-# Repo A - Minimal Educational Repo
+# A - example- sequence handling in Python
 
-This minimal repository contains beginner-friendly examples for sequence handling in Python.
+This folder contains beginner-friendly examples for sequence handling in Python.
 
 Structure:
 - basic_examples.py
