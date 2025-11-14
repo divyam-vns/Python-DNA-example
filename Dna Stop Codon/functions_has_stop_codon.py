@@ -1,4 +1,4 @@
-# functions.py
+# functions.py/has_stop_codon.py
 # Boolean-style function to detect in-frame stop codons
 
 
