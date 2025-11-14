@@ -1,3 +1,4 @@
+# Remove invalid amino acids using continue.
 protein = "MRTGWUASDJKLQWERUITYPAAJCH"
 valid_aas = "ARNDCEQGHILKMFPSTWYV"
 corrected = ""
