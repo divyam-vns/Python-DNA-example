@@ -1,3 +1,4 @@
+# Print all invalid amino acids with positions.
 protein = "MRTGWUASDJKLQWERUITYPAAJCH"  # contains invalid U, J
 
 valid_aas = "ARNDCEQGHILKMFPSTWYV"
