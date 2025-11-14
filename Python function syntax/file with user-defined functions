@@ -1,0 +1,37 @@
+# Bioinformatics DNA Functions in Python
+# file with user-defined functions
+
+# Function 1: Compute GC percentage
+def GC(DNA):
+    """Compute the GC percentage of a DNA sequence, ignoring undefined bases (N)."""
+    nbases = DNA.count('N') + DNA.count('n')
+    g_count = DNA.count('G') + DNA.count('g')
+    c_count = DNA.count('C') + DNA.count('c')
+    GC_percent = (g_count + c_count) * 100 / (len(DNA) - nbases)
+    return GC_percent
+
+# Function 2: Reverse Complement of a DNA sequence
+def reverse_complement(DNA):
+    """Return the reverse complement of a DNA sequence."""
+    complement = {'A':'T','T':'A','G':'C','C':'G','a':'t','t':'a','g':'c','c':'g','N':'N','n':'n'}
+    rev_comp = ''.join(complement.get(base, 'N') for base in reversed(DNA))
+    return rev_comp
+
+# Function 3: Check for in-frame stop codons
+def has_inframe_stop(DNA):
+    """Check if DNA sequence has in-frame stop codons (TAA, TAG, TGA) in frame 0."""
+    stop_codons = ['TAA', 'TAG', 'TGA']
+    for i in range(0, len(DNA)-2, 3):  # frame 0
+        codon = DNA[i:i+3].upper()
+        if codon in stop_codons:
+            return True
+    return False
+
+# Example usage
+if __name__ == "__main__":
+    dna_seq = "ATGCGCGTANNNATGC"
+
+    print(f"DNA Sequence: {dna_seq}")
+    print(f"GC Content: {GC(dna_seq):.2f}%")
+    print(f"Reverse Complement: {reverse_complement(dna_seq)}")
+    print(f"Has in-frame stop codon? {has_inframe_stop(dna_seq)}")
