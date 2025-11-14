@@ -6,3 +6,6 @@ for i in range(len(protein)):
         continue
     corrected += protein[i]
 print("Corrected protein:", corrected)
+
+# output
+# Corrected protein: MRTGWASDKLQWERITYPAACH
