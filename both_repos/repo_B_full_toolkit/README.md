@@ -1,6 +1,6 @@
-# Repo B - Full Bioinformatics Toolkit
+# B - Full Bioinformatics Toolkit
 
-This repository provides a fuller toolkit:
+This folder provides a fuller example toolkit:
 - sequences/ : example FASTA files
 - src/ : Python scripts (basic + advanced)
 - notebooks/ : starter Jupyter notebook
