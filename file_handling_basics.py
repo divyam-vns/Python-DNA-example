@@ -1,6 +1,7 @@
+# Foundational file I/O with error handling, reading, writing, seeking.
+
 #!/usr/bin/env python3
 """
-Foundational file I/O with error handling, reading, writing, seeking.
 file_handling_basics.py
 Demonstrates:
 - Opening files (r/w/a)
