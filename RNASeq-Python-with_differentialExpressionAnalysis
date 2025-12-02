@@ -1,0 +1,162 @@
+# ===========================================
+# GitHub-ready NGS Python Pipeline with Differential Expression Analysis
+# ===========================================
+
+# This repository demonstrates a simple RNA-Seq analysis pipeline using Python libraries:
+# pandas, NumPy, and scikit-learn, with synthetic data included for immediate use.
+# Added differential expression analysis (DEA) with t-test and FDR adjustment.
+
+# Directory structure:
+# ngs_python_pipeline/
+# ├── README.md
+# ├── data/
+# │   ├── counts.csv
+# │   └── metadata.csv
+# ├── pandas_example.py
+# ├── numpy_example.py
+# ├── scikit_learn_example.py
+# └── differential_expression.py
+
+# --------------------
+# 1. pandas_example.py
+# --------------------
+import pandas as pd
+
+# Load synthetic RNA-Seq counts
+df_counts = pd.read_csv('data/counts.csv', index_col=0)
+print("First 5 rows of raw counts:")
+print(df_counts.head())
+
+# Filter genes with low expression (sum across samples > 10)
+df_filtered = df_counts[df_counts.sum(axis=1) > 10]
+print("\nFiltered genes (sum > 10):")
+print(df_filtered.head())
+
+# Load sample metadata
+metadata = pd.read_csv('data/metadata.csv', index_col=0)
+print("\nMetadata:")
+print(metadata.head())
+
+# Merge counts with metadata (samples as rows)
+df_merged = df_filtered.T.merge(metadata, left_index=True, right_index=True)
+print("\nMerged counts with metadata:")
+print(df_merged.head())
+
+# Save filtered counts for next steps
+df_filtered.to_csv('data/filtered_counts.csv')
+
+# --------------------
+# 2. numpy_example.py
+# --------------------
+import pandas as pd
+import numpy as np
+
+# Load filtered counts
+df = pd.read_csv('data/filtered_counts.csv', index_col=0)
+
+# Convert to NumPy array for normalization
+counts = df.values
+
+# Counts per million (CPM)
+counts_sum = counts.sum(axis=0)
+cpm = (counts / counts_sum) * 1e6
+
+# Log2 transformation
+log_cpm = np.log2(cpm + 1)
+
+# Back to DataFrame
+df_norm = pd.DataFrame(log_cpm, index=df.index, columns=df.columns)
+print("Normalized log2 CPM counts:")
+print(df_norm.head())
+
+# Save normalized counts
+df_norm.to_csv('data/normalized_counts.csv')
+
+# --------------------
+# 3. scikit_learn_example.py
+# --------------------
+import pandas as pd
+from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+
+# Load normalized counts
+df_norm = pd.read_csv('data/normalized_counts.csv', index_col=0)
+
+# PCA on samples (samples as rows)
+data_samples = df_norm.T
+pca = PCA(n_components=2)
+principal_components = pca.fit_transform(data_samples)
+
+# Create DataFrame for PCA plot
+pca_df = pd.DataFrame(principal_components, columns=['PC1', 'PC2'])
+pca_df['Condition'] = ['Control', 'Control', 'Control', 'Treatment', 'Treatment', 'Treatment']
+
+# Plot PCA
+plt.figure(figsize=(6,5))
+colors = ['blue' if c=='Control' else 'red' for c in pca_df['Condition']]
+plt.scatter(pca_df['PC1'], pca_df['PC2'], c=colors, s=100)
+plt.xlabel('PC1')
+plt.ylabel('PC2')
+plt.title('PCA of RNA-Seq Samples')
+plt.savefig('data/pca_plot.png')
+plt.show()
+
+# KMeans clustering on genes
+kmeans = KMeans(n_clusters=3, random_state=42)
+clusters = kmeans.fit_predict(df_norm)
+df_norm['Cluster'] = clusters
+print("Top genes with assigned clusters:")
+print(df_norm.head())
+
+# Save clustering result
+df_norm.to_csv('data/gene_clusters.csv')
+
+# --------------------
+# 4. differential_expression.py
+# --------------------
+import pandas as pd
+import numpy as np
+from scipy.stats import ttest_ind
+from statsmodels.stats.multitest import multipletests
+import matplotlib.pyplot as plt
+
+# Load normalized counts
+df_norm = pd.read_csv('data/normalized_counts.csv', index_col=0)
+
+# Define sample groups
+control_samples = ['Sample1', 'Sample2', 'Sample3']
+treatment_samples = ['Sample4', 'Sample5', 'Sample6']
+
+results = []
+
+# Loop over each gene to compute log2 fold-change and t-test
+for gene in df_norm.index:
+    control_values = df_norm.loc[gene, control_samples].values
+    treatment_values = df_norm.loc[gene, treatment_samples].values
+    
+    t_stat, p_value = ttest_ind(treatment_values, control_values)
+    log2_fc = np.mean(treatment_values) - np.mean(control_values)
+    
+    results.append([gene, log2_fc, p_value])
+
+# Convert to DataFrame
+ df_de = pd.DataFrame(results, columns=['Gene', 'log2FC', 'p_value'])
+
+# Adjust p-values using FDR
+ df_de['q_value'] = multipletests(df_de['p_value'], method='fdr_bh')[1]
+
+# Sort by q-value
+ df_de = df_de.sort_values('q_value')
+
+# Save DE results
+ df_de.to_csv('data/differential_expression_results.csv', index=False)
+
+# Volcano plot
+plt.figure(figsize=(6,5))
+plt.scatter(df_de['log2FC'], -np.log10(df_de['q_value']), color='gray')
+plt.xlabel('log2 Fold Change')
+plt.ylabel('-log10(q-value)')
+plt.title('Volcano Plot of Differential Expression')
+plt.savefig('data/volcano_plot.png')
+plt.show()
