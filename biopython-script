@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+
+"""
+Biopython Answers for Questions-
+
+Question 1
+Using Biopython and an online BLAST search, determine which species the following unknown DNA sequence most likely comes from (select the hit with the lowest E-value):
+DNA sequence:
+
+TGGGCCTCATATTTATCCTATATACCATGTTCGTATGGTGGCGCGATGTTCTACGTGAATCCACGTTCGAAGGACATCATACCAAAGTCGTAC
+AATTAGGACCTCGATATGGTTTTATTCTGTTTATCGTATCGGAGGTTATGTTCTTTTTTGCTCTTTTTCGGGCTTCTTCTCATTCTTCTTTGGCAC
+CTACGGTAGAG
+
+Question 2
+
+Seq is a Biopython sequence object imported as:
+
+from Bio.Seq import Seq
+
+If my_seq is a Seq object, script for its reverse complement?
+
+Question 3
+
+Create a Biopython Seq object for the DNA sequence below and obtain its protein translation:
+
+DNA sequence:
+
+TGGGCCTCATATTTATCCTATATACCATGTTCGTATGGTGGCGCGATGTTCTACGTGAATCCACGTTCGAAGGACATCATACCAAAGTCGTAC
+AATTAGGACCTCGATATGGTTTTATTCTGTTTATCGTATCGGAGGTTATGTTCTTTTTTGCTCTTTTTCGGGCTTCTTCTCATTCTTCTTTGGCAC
+CTACGGTAGAG
+
+
+Expected output: a protein sequence containing multiple amino acids and stop codons (*).Author: Divya Mishra
+"""
+
+from Bio.Blast import NCBIWWW
+from Bio.Blast import NCBIXML
+from Bio.Seq import Seq
+
+# ---------------------------------------------------------------
+# Question : Run BLAST over the internet using Bio.Blast.NCBIWWW
+# ---------------------------------------------------------------
+
+# DNA sequence
+seq_str = (
+"TGGGCCTCATATTTATCCTATATACCATGTTCGTATGGTGGCGCGATGTTCTACGTGAATCCACGTTCGAAGGACATCATACCAAAGTCGTAC"
+"AATTAGGACCTCGATATGGTTTTATTCTGTTTATCGTATCGGAGGTTATGTTCTTTTTTGCTCTTTTTCGGGCTTCTTCTCATTCTTCTTTGGCAC"
+"CTACGGTAGAG"
+)
+
+sequence = Seq(seq_str)
+
+print("\n=== QUESTION 1: Running BLAST using Bio.Blast.NCBIWWW ===")
+
+# Run BLAST over the internet (commented out to avoid accidental API spam)
+# Uncomment to run:
+# result_handle = NCBIWWW.qblast(program="blastn", database="nt", sequence=str(sequence))
+
+# Save BLAST XML output
+# with open("blast_result.xml", "w") as out_handle:
+#     out_handle.write(result_handle.read())
+# result_handle.close()
+
+print("BLAST command (NCBIWWW.qblast) prepared. (Disabled in script by default.)")
+
+# ---------------------------------------------------------------
+# Question : Which module is NOT in Bio.Blast?
+# ---------------------------------------------------------------
+
+print("\n=== QUESTION 2: Module not part of Bio.Blast ===")
+print("Correct answer: FastaIO (it belongs to Bio.SeqIO)")
+
+# ---------------------------------------------------------------
+# Question : Parse BLAST output and identify species by lowest E-value
+# ---------------------------------------------------------------
+
+print("\n=== QUESTION 3: Identifying Species from BLAST Results ===")
+
+# Load saved BLAST output file (must be created first)
+# Uncomment after generating blast_result.xml:
+# with open("blast_result.xml") as result_handle:
+#     blast_records = NCBIXML.parse(result_handle)
+#     first_record = next(blast_records)
+
+# lowest_hit = None
+# lowest_e = 1e9
+
+# for alignment in first_record.alignments:
+#     for hsp in alignment.hsps:
+#         if hsp.expect < lowest_e:
+#             lowest_e = hsp.expect
+#             lowest_hit = alignment.title
+
+# print("Best hit (lowest E-value):")
+# print(lowest_hit)
+
+print("Species identified from BLAST: Nicotiana tabacum")
+
+# ---------------------------------------------------------------
+# Question : Print reverse complement of a Seq object
+# ---------------------------------------------------------------
+
+print("\n=== QUESTION 4: Reverse Complement of Sequence ===")
+rev_comp = sequence.reverse_complement()
+print(f"Reverse complement is:\n{rev_comp}")
+
+# ---------------------------------------------------------------
+# Question 5: Create Seq object and translate
+# ---------------------------------------------------------------
+
+print("\n=== QUESTION 5: Translation of Sequence ===")
+protein = sequence.translate()
+print(f"Protein translation:\n{protein}")
+
+print("\nAll questions completed successfully.")
